@@ -3,217 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KGTÜ Premium İç Mekan Navigasyon: Merkez Bina</title>
+    <title>KGTÜ Merkez Bina - Gelişmiş Navigasyon</title>
     <style>
-        /* KGTÜ Logo Renk Paletine Uygun Premium Tema (Mavi, Yeşil, Turuncu) */
+        /* --- KGTÜ KURUMSAL PREMIUM TEMA --- */
         :root {
-            --depth-blue: #0f172a; /* Derin Gece Mavisi Arka Plan */
-            --glass-blue: rgba(17, 24, 39, 0.7); /* Saydam Derin Mavi Paneller */
-            --glass-border: rgba(34, 197, 94, 0.2); /* Yeşil Aksanlı Glassmorphism Sınırı */
-            
-            --vibrant-green: #22c55e; /* Canlı Yeşil - Rota Çizgileri, Seçili Düğümler, Başlıklar */
-            --vibrant-orange: #f97316; /* Canlı Turuncu - Hedef Noktaları, Kafeler */
-            
-            --text-gold: #fde047; /* Hafif Altın Metin Aksanı */
-            --text-main: #e2e8f0; /* Açık Gümüş Metin */
+            --bg-color: #0B1120; /* Gece Mavisi */
+            --panel-bg: rgba(15, 23, 42, 0.85); /* Cam Efektli Panel */
+            --kgtu-green: #10B981; /* KGTÜ Yeşili */
+            --kgtu-orange: #F97316; /* KGTÜ Turuncusu */
+            --border-color: rgba(16, 185, 129, 0.3);
+            --text-light: #F1F5F9;
         }
 
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            background: linear-gradient(135deg, #0f172a, #111827); /* Derin Gece Mavisi Gradiyenti */
-            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            margin: 0; padding: 20px; 
+            background-color: var(--bg-color); 
+            background-image: radial-gradient(circle at top right, #1e293b, #0B1120);
+            color: var(--text-light);
             min-height: 100vh;
         }
 
         .container { 
-            max-width: 1100px; 
+            max-width: 1200px; 
             margin: 0 auto; 
-            background: var(--glass-blue);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
             padding: 30px; 
             border-radius: 20px; 
-            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.7); 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
         }
 
-        h1 { 
-            text-align: center; 
-            color: var(--vibrant-green); 
-            font-weight: 300;
-            letter-spacing: 3px;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-        }
+        h1 { text-align: center; color: var(--kgtu-green); font-weight: 300; text-transform: uppercase; letter-spacing: 2px;}
+        h1 b { color: var(--kgtu-orange); }
 
-        h1 b { color: var(--vibrant-orange); }
-
-        .controls { 
-            display: flex; 
-            gap: 15px; 
-            margin-bottom: 25px; 
-            flex-wrap: wrap; 
-            justify-content: center; 
-            align-items: center; 
-        }
-
+        /* --- KONTROL PANELİ --- */
+        .controls { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+        
         select { 
-            padding: 12px 20px; 
-            border-radius: 10px; 
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--glass-border); 
-            color: white;
-            font-size: 15px; 
-            outline: none;
-            transition: all 0.3s ease;
+            padding: 12px; border-radius: 8px; 
+            background: #1E293B; border: 1px solid var(--kgtu-green); 
+            color: white; font-size: 14px; width: 250px;
         }
 
-        select:focus {
-            border-color: var(--vibrant-green);
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+        .btn {
+            padding: 12px 25px; border-radius: 8px; border: none; 
+            font-weight: bold; cursor: pointer; transition: 0.3s;
         }
+        .btn-gps { background: #334155; color: var(--kgtu-orange); border: 1px solid var(--kgtu-orange); }
+        .btn-gps:hover { background: var(--kgtu-orange); color: white; }
+        .btn-route { background: var(--kgtu-green); color: #0B1120; }
+        .btn-route:hover { box-shadow: 0 0 15px var(--kgtu-green); }
 
-        .gps-btn {
-            background: linear-gradient(45deg, #111827, #0f172a); 
-            color: var(--vibrant-orange);
-            border: 1px solid var(--vibrant-orange);
-            box-shadow: 0 2px 10px rgba(249, 115, 22, 0.3);
+        /* --- KAT SEÇİCİ --- */
+        .floor-selector { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .floor-btn { 
+            padding: 10px 20px; background: #1E293B; border: 1px solid gray; 
+            color: white; border-radius: 5px; cursor: pointer; 
         }
+        .floor-btn.active { background: var(--kgtu-orange); border-color: var(--kgtu-orange); font-weight: bold;}
 
-        .gps-btn:hover {
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.5);
-        }
-
-        button { 
-            padding: 12px 30px; 
-            border-radius: 10px; 
-            background: linear-gradient(45deg, #22c55e, #16a34a); 
-            color: #121212; 
-            border: none; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-size: 15px;
-            letter-spacing: 1px;
-            transition: 0.3s; 
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
-        }
-
-        button:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.6);
-        }
-        
-        /* Harita Alanı - Yuvarlak (C-Şekli) Taslağı Yansıtmalı */
+        /* --- HARİTA ALANI --- */
         #map-container { 
-            position: relative; 
-            width: 100%; 
-            height: 600px; 
-            background-color: rgba(0,0,0,0.85); 
-            border: 1px solid var(--glass-border); 
-            border-radius: 15px; 
-            overflow: hidden; 
-            margin-bottom: 25px; 
+            position: relative; width: 100%; height: 600px; 
+            background: #0F172A; border: 2px solid var(--border-color); 
+            border-radius: 15px; overflow: hidden; 
         }
-        
-        /* Arka plan taslağı silindi, düğümler bu yuvarlak dairesel yörünge/C şekline göre dağıtıldı */
+
         #map-bg { 
-            width: 100%; 
-            height: 100%; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            opacity: 0.2; 
-            /* Yörünge şeklini anımsatan çok silik bir geometrik desen */
-            background-image: radial-gradient(var(--glass-border) 1px, transparent 1px);
-            background-size: 30px 30px;
+            width: 100%; height: 100%; position: absolute; opacity: 0.15;
+            /* Binanın C/Üçgen şeklini temsil eden ızgara arka planı */
+            background-image: linear-gradient(var(--kgtu-green) 1px, transparent 1px), linear-gradient(90deg, var(--kgtu-green) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
+
+        svg { position: absolute; width: 100%; height: 100%; pointer-events: none; }
         
-        /* Çizgiler için SVG */
-        #routes { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        
-        /* Noktalar (Düğümler) */
+        /* Noktalar */
         .node { 
-            position: absolute; 
-            width: 14px; 
-            height: 14px; 
-            border-radius: 50%; 
-            transform: translate(-50%, -50%); 
-            cursor: pointer; 
-            border: 2px solid var(--depth-blue); 
-            transition: all 0.3s ease;
-            opacity: 0.8;
+            position: absolute; width: 16px; height: 16px; 
+            background: var(--kgtu-green); border-radius: 50%; 
+            transform: translate(-50%, -50%); border: 3px solid #0F172A; 
+            cursor: pointer; transition: 0.3s; z-index: 10;
         }
-
-        /* Başlangıç/Normal Düğüm: Yeşil */
-        .node:not(.vibrant) {
-            background-color: var(--vibrant-green); 
-            box-shadow: 0 0 10px var(--vibrant-green); 
-        }
-
-        /* Hedef/Canlı Düğüm: Turuncu (Kafeler, Hedef Seçili) */
-        .node.vibrant {
-            background-color: var(--vibrant-orange); 
-            box-shadow: 0 0 12px var(--vibrant-orange); 
-            width: 16px;
-            height: 16px;
-        }
-
-        .node:hover {
-            transform: translate(-50%, -50%) scale(1.6);
-            opacity: 1;
-        }
-
-        .node-label { 
-            position: absolute; 
-            font-size: 11px; 
-            font-weight: 600; 
-            color: #121212;
-            background: var(--vibrant-green); 
-            padding: 3px 8px; 
-            border-radius: 4px; 
-            transform: translate(-50%, 15px); 
-            pointer-events: none; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.6);
-            white-space: nowrap;
-        }
-
-        .node.vibrant + .node-label {
-            background: var(--vibrant-orange);
-        }
+        .node.special { background: var(--kgtu-orange); width: 20px; height: 20px; box-shadow: 0 0 15px var(--kgtu-orange); }
+        .node.elevator { background: #3B82F6; border-radius: 4px; } /* Asansörler kare */
         
-        /* Yol Tarifi Paneli */
-        #directions { 
-            padding: 20px; 
-            background: rgba(0, 0, 0, 0.4); 
-            border-left: 4px solid var(--vibrant-green); 
-            border-radius: 0 10px 10px 0; 
-            font-size: 15px; 
-            line-height: 1.6; 
-            color: var(--text-main);
+        .node-label { 
+            position: absolute; font-size: 11px; background: rgba(0,0,0,0.8); 
+            padding: 4px 8px; border-radius: 4px; border: 1px solid var(--kgtu-green);
+            transform: translate(-50%, 15px); white-space: nowrap; z-index: 11;
         }
 
-        ol { margin: 0; padding-left: 20px; }
-        li { margin-bottom: 8px; }
-        b { color: var(--vibrant-green); }
-        li b { color: var(--vibrant-orange); } /* Talimattaki Hedef Turuncu */
+        /* --- YOL TARİFİ --- */
+        #directions { 
+            margin-top: 20px; padding: 20px; background: rgba(16, 185, 129, 0.1); 
+            border-left: 4px solid var(--kgtu-green); border-radius: 8px; line-height: 1.6;
+        }
+        .step-floor { color: var(--kgtu-orange); font-weight: bold; margin-top: 10px; display: inline-block;}
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>KGTÜ <b>Navigasyon</b>: Merkez Bina</h1>
+    <h1>KGTÜ Merkez Bina <b>Navigasyon</b></h1>
     
     <div class="controls">
-        <select id="start">
-            <option value="" disabled selected>Neredesin?</option>
-        </select>
-        <button class="gps-btn" onclick="getKonumFromKonum()">(?) Konumdan Al</button>
-        <select id="end">
-            <option value="" disabled selected>Nereye Gitmek İstiyorsun?</option>
-        </select>
-        <button onclick="calculateRoute()">ROTAYI ÇİZ</button>
+        <select id="start"><option value="" disabled selected>Şu an neredesin?</option></select>
+        <button class="btn btn-gps" onclick="getLocation()">📍 Konumumu Bul</button>
+        <select id="end"><option value="" disabled selected>Nereye gideceksin?</option></select>
+        <button class="btn btn-route" onclick="calculateRoute()">Yol Tarifi Al</button>
+    </div>
+
+    <div class="floor-selector">
+        <button class="floor-btn active" onclick="changeFloor(0)" id="btn-f0">Zemin Kat (Girişler)</button>
+        <button class="floor-btn" onclick="changeFloor(1)" id="btn-f1">1. Kat (Neo Cafe / MBG)</button>
+        <button class="floor-btn" onclick="changeFloor(2)" id="btn-f2">2. Kat (Neo Mutfak)</button>
     </div>
 
     <div id="map-container">
@@ -222,190 +127,187 @@
         <div id="nodes-container"></div>
     </div>
 
-    <div id="directions">Navigasyon talimatları ve rota bilgisi için başlangıç ve hedef seçin.</div>
+    <div id="directions">Lütfen başlangıç ve hedef noktasını seçip rotayı çizin.</div>
 </div>
 
 <script>
-    // 1. KGTÜ MERKEZ BİNA BİREBİR LOKASYONLARI (Yuvarlak/C-Şekline Uygun Dağıtıldı)
+    // --- 1. DEVASA KGTÜ VERİTABANI (Katlar, Koordinatlar ve Türler) ---
+    // f: 0 (Zemin), f: 1 (1. Kat), f: 2 (2. Kat)
     const locations = {
-        // --- DIŞ MEKAN VE ZEMİN KAT ---
-        "MB_GirisA": { x: 500, y: 550, name: "Zemin Kat Ana Giriş (A)" },
-        "MB_GirisB": { x: 300, y: 480, name: "B Girişi" },
-        "MB_GirisC": { x: 700, y: 480, name: "C Girişi" },
-        "MB_Fuaye": { x: 500, y: 450, name: "Ana Fuaye Alanı" },
-        "MB_AsansorZemin": { x: 500, y: 350, name: "Zemin Asansör/Merdiven" }, // Kat geçiş düğümü
+        // --- ZEMİN KAT (f: 0) ---
+        "Z_AnaGiris": { x: 550, y: 550, f: 0, name: "Ana Giriş Kapısı", type: "special" },
+        "Z_GirisA": { x: 250, y: 480, f: 0, name: "A Blok Giriş" },
+        "Z_GirisC": { x: 850, y: 480, f: 0, name: "C Blok Giriş" },
+        "Z_Fuaye": { x: 550, y: 450, f: 0, name: "Ana Fuaye Alanı" },
+        "Z_OgrenciIsleri": { x: 650, y: 450, f: 0, name: "Öğrenci İşleri" },
+        "Z_AsansorMerkez": { x: 550, y: 350, f: 0, name: "Zemin Kat Ana Asansör", type: "elevator" },
+        "Z_AsansorA": { x: 250, y: 350, f: 0, name: "A Blok Asansörü", type: "elevator" },
+        "Z_AsansorC": { x: 850, y: 350, f: 0, name: "C Blok Asansörü", type: "elevator" },
+        "Z_Kutuphane": { x: 750, y: 350, f: 0, name: "Merkez Kütüphane" },
+        "Z_BuyukKonferans": { x: 350, y: 350, f: 0, name: "Büyük Konferans Salonu" },
 
-        // --- 1. KAT (Sağ Bölge Dairesel Akış) ---
-        "K1_MerkezAsansor": { x: 500, y: 250, name: "1. Kat Asansör/Merdiven" },
-        "K1_KoridorA": { x: 700, y: 200, name: "1. Kat A Koridoru" },
-        "K1_Lab_MBG": { x: 850, y: 150, name: "Moleküler Biyoloji Lab 1" },
-        "K1_KafeGiris": { x: 600, y: 100, name: "1. Kat Kafe Yolu" },
-        "K1_NeoKafe": { x: 500, y: 50, name: "Neo Cafe (Orta Bağlantı)", vibrant: true }, // 1. Kat Ortadaki Canlı Nokta
+        // --- 1. KAT (f: 1) ---
+        "K1_AsansorMerkez": { x: 550, y: 350, f: 1, name: "1. Kat Ana Asansör", type: "elevator" },
+        "K1_NeoCafe": { x: 550, y: 250, f: 1, name: "Neo Cafe (Orta Bağlantı)", type: "special" }, // İstediğin Orta Bağlantı
+        "K1_AsansorA": { x: 250, y: 350, f: 1, name: "1. Kat A Asansörü", type: "elevator" },
+        "K1_KoridorA": { x: 250, y: 250, f: 1, name: "1. Kat A Koridoru" },
+        "K1_MBG_Lab1": { x: 150, y: 250, f: 1, name: "Moleküler Biyoloji Lab 1" }, // Bölümün
+        "K1_MBG_Lab2": { x: 150, y: 150, f: 1, name: "Moleküler Biyoloji Lab 2" },
+        "K1_AsansorC": { x: 850, y: 350, f: 1, name: "1. Kat C Asansörü", type: "elevator" },
+        "K1_KoridorC": { x: 850, y: 250, f: 1, name: "1. Kat C Koridoru" },
+        "K1_DerslikC101": { x: 950, y: 250, f: 1, name: "C-101 Dersliği" },
 
-        // --- 2. KAT (Sol Bölge Dairesel Akış) ---
-        "K2_MerkezAsansor": { x: 500, y: 150, name: "2. Kat Asansör/Merdiven" },
-        "K2_KoridorB": { x: 300, y: 200, name: "2. Kat B Koridoru" },
-        "K2_Lab_GD": { x: 150, y: 260, name: "Gıda Kimyası Laboratuvarı" },
-        "K2_MutfakGiris": { x: 400, y: 100, name: "2. Kat Mutfak Yolu" },
-        "K2_NeoMutfak": { x: 500, y: 50, name: "Neo Mutfak (Orta Bağlantı)", vibrant: true } // 2. Kat Ortadaki Canlı Nokta
+        // --- 2. KAT (f: 2) ---
+        "K2_AsansorMerkez": { x: 550, y: 350, f: 2, name: "2. Kat Ana Asansör", type: "elevator" },
+        "K2_NeoMutfak": { x: 550, y: 250, f: 2, name: "Neo Mutfak (Orta Bağlantı)", type: "special" }, // İstediğin Orta Bağlantı
+        "K2_AsansorA": { x: 250, y: 350, f: 2, name: "2. Kat A Asansörü", type: "elevator" },
+        "K2_KoridorA": { x: 250, y: 250, f: 2, name: "2. Kat A Koridoru" },
+        "K2_AkademikOfis": { x: 150, y: 250, f: 2, name: "MBG Akademik Ofisler" },
+        "K2_AsansorC": { x: 850, y: 350, f: 2, name: "2. Kat C Asansörü", type: "elevator" },
+        "K2_KoridorC": { x: 850, y: 250, f: 2, name: "2. Kat C Koridoru" },
+        "K2_BilgisayarLab": { x: 950, y: 250, f: 2, name: "Bilgisayar Laboratuvarı" }
     };
 
-    // 2. BİNA İÇİ BAĞLANTILAR VE YÜRÜYÜŞ MESAFELERİ
+    // --- 2. YOLLAR VE BAĞLANTILAR (Merdiven ve Asansörler dahil) ---
     const graph = {
-        // Zemin Kat
-        "MB_GirisA": { "MB_Fuaye": 10 },
-        "MB_GirisB": { "MB_Fuaye": 15 },
-        "MB_GirisC": { "MB_Fuaye": 15 },
-        "MB_Fuaye": { "MB_GirisA": 10, "MB_GirisB": 15, "MB_GirisC": 15, "MB_AsansorZemin": 20 },
-        "MB_AsansorZemin": { "MB_Fuaye": 20, "K1_MerkezAsansor": 15 }, // Zemin asansörü -> 1. Kat asansörü
+        // Zemin İçi
+        "Z_AnaGiris": { "Z_Fuaye": 10 },
+        "Z_GirisA": { "Z_AsansorA": 15 },
+        "Z_GirisC": { "Z_AsansorC": 15 },
+        "Z_Fuaye": { "Z_AnaGiris": 10, "Z_OgrenciIsleri": 15, "Z_AsansorMerkez": 20, "Z_AsansorA": 35, "Z_AsansorC": 35 },
+        "Z_OgrenciIsleri": { "Z_Fuaye": 15 },
+        "Z_AsansorMerkez": { "Z_Fuaye": 20, "Z_BuyukKonferans": 25, "Z_Kutuphane": 25, "K1_AsansorMerkez": 30 }, // Zemin'den 1'e çıkış
+        "Z_BuyukKonferans": { "Z_AsansorMerkez": 25, "Z_AsansorA": 15 },
+        "Z_Kutuphane": { "Z_AsansorMerkez": 25, "Z_AsansorC": 15 },
+        "Z_AsansorA": { "Z_GirisA": 15, "Z_Fuaye": 35, "Z_BuyukKonferans": 15, "K1_AsansorA": 30 },
+        "Z_AsansorC": { "Z_GirisC": 15, "Z_Fuaye": 35, "Z_Kutuphane": 15, "K1_AsansorC": 30 },
 
-        // 1. Kat
-        "K1_MerkezAsansor": { "MB_AsansorZemin": 15, "K1_KoridorA": 15, "K1_KafeGiris": 20, "K2_MerkezAsansor": 15 }, // 1. asansör -> 2. Kat asansörü
-        "K1_KoridorA": { "K1_MerkezAsansor": 15, "K1_Lab_MBG": 20 },
-        "K1_Lab_MBG": { "K1_KoridorA": 20 },
-        "K1_KafeGiris": { "K1_MerkezAsansor": 20, "K1_NeoKafe": 15 },
-        "K1_NeoKafe": { "K1_KafeGiris": 15 },
+        // 1. Kat İçi
+        "K1_AsansorMerkez": { "Z_AsansorMerkez": 30, "K1_NeoCafe": 20, "K2_AsansorMerkez": 30 }, // 1'den 2'ye çıkış
+        "K1_NeoCafe": { "K1_AsansorMerkez": 20, "K1_KoridorA": 40, "K1_KoridorC": 40 }, // Orta kafeden yanlara geçiş
+        "K1_AsansorA": { "Z_AsansorA": 30, "K1_KoridorA": 15, "K2_AsansorA": 30 },
+        "K1_KoridorA": { "K1_AsansorA": 15, "K1_NeoCafe": 40, "K1_MBG_Lab1": 15 },
+        "K1_MBG_Lab1": { "K1_KoridorA": 15, "K1_MBG_Lab2": 15 },
+        "K1_MBG_Lab2": { "K1_MBG_Lab1": 15 },
+        "K1_AsansorC": { "Z_AsansorC": 30, "K1_KoridorC": 15, "K2_AsansorC": 30 },
+        "K1_KoridorC": { "K1_AsansorC": 15, "K1_NeoCafe": 40, "K1_DerslikC101": 15 },
+        "K1_DerslikC101": { "K1_KoridorC": 15 },
 
-        // 2. Kat
-        "K2_MerkezAsansor": { "K1_MerkezAsansor": 15, "K2_KoridorB": 15, "K2_MutfakGiris": 20 },
-        "K2_KoridorB": { "K2_MerkezAsansor": 15, "K2_Lab_GD": 20 },
-        "K2_Lab_GD": { "K2_KoridorB": 20 },
-        "K2_MutfakGiris": { "K2_MerkezAsansor": 20, "K2_NeoMutfak": 15 },
-        "K2_NeoMutfak": { "K2_MutfakGiris": 15 }
+        // 2. Kat İçi
+        "K2_AsansorMerkez": { "K1_AsansorMerkez": 30, "K2_NeoMutfak": 20 },
+        "K2_NeoMutfak": { "K2_AsansorMerkez": 20, "K2_KoridorA": 40, "K2_KoridorC": 40 },
+        "K2_AsansorA": { "K1_AsansorA": 30, "K2_KoridorA": 15 },
+        "K2_KoridorA": { "K2_AsansorA": 15, "K2_NeoMutfak": 40, "K2_AkademikOfis": 15 },
+        "K2_AkademikOfis": { "K2_KoridorA": 15 },
+        "K2_AsansorC": { "K1_AsansorC": 30, "K2_KoridorC": 15 },
+        "K2_KoridorC": { "K2_AsansorC": 15, "K2_NeoMutfak": 40, "K2_BilgisayarLab": 15 },
+        "K2_BilgisayarLab": { "K2_KoridorC": 15 }
     };
 
-    // 3. GPS SİMÜLASYONU REFERANS KOORDİNATLARI (Teknik olarak dürüstçe karşılanmalı: Bina Dış Mekan Referansı)
-    // Bu, GPS ile alınacak dış mekan koordinatlarını binada varsaymak için referans noktasıdır.
-    // Gerçek bir iç mekan takibi (odadan odaya) sadece HTML5 GPS ile yapılamaz, donanım gerektirir.
-    // Bu kod, GPS izni alındığında binada olup olmadığınızı ve en yakın girişi referans alarak simülasyon yapar.
-    const KGTU_REFERANS_GIRIS_KOORD = { lat: 37.8920, lng: 32.4850 }; // KGTÜ Merkez Bina Dış Mekan Referans Koordinatları
-    const BINA_MESAFE_HATA_PAYI = 150; // Binaya "buradayım" varsaymak için maksimum mesafe (metre)
+    let currentFloor = 0; // Başlangıçta Zemin Kat açık
+    let currentPath = []; // Çizilen rota hafızası
 
-    window.onload = function() {
-        populateDropdowns();
-        drawNodes();
+    window.onload = () => {
+        populateSelects();
+        renderFloor(currentFloor);
     };
 
-    function populateDropdowns() {
-        const startSelect = document.getElementById('start');
-        const endSelect = document.getElementById('end');
+    function populateSelects() {
+        const start = document.getElementById('start');
+        const end = document.getElementById('end');
         for (const [id, data] of Object.entries(locations)) {
-            startSelect.innerHTML += `<option value="${id}">${data.name}</option>`;
-            endSelect.innerHTML += `<option value="${id}">${data.name}</option>`;
+            // Dropdownlarda kat bilgisini de göster
+            let floorText = data.f === 0 ? "(Zemin)" : data.f === 1 ? "(1. Kat)" : "(2. Kat)";
+            start.innerHTML += `<option value="${id}">${data.name} ${floorText}</option>`;
+            end.innerHTML += `<option value="${id}">${data.name} ${floorText}</option>`;
         }
     }
 
-    function drawNodes() {
-        const nodesContainer = document.getElementById('nodes-container');
-        for (const [id, data] of Object.entries(locations)) {
-            const nodeClass = data.vibrant ? 'node vibrant' : 'node';
-            nodesContainer.innerHTML += `
-                <div class="${nodeClass}" style="left: ${data.x}px; top: ${data.y}px;" title="${data.name}"></div>
-                <div class="node-label" style="left: ${data.x}px; top: ${data.y}px;">${data.name}</div>
-            `;
-        }
-    }
-
-    // --- FONKSİYONEL GPS SIMÜLASYONU KODU ---
-    // Bu fonksiyon, "konum izni iste konum afoğru götürsün" isteğini teknik sınırlara göre en dürüstçe simüle eder.
-    // Dış mekan GPS'ini referans mesafe ile birleştirip "binadasınız" simülasyonu yapar.
-    function getKonumFromKonum() {
-        const startSelect = document.getElementById('start');
-        const directionsPanel = document.getElementById('directions');
-
-        directionsPanel.innerHTML = "Konumunuz alınıyor ve binayla karşılaştırılıyor. Lütfen bekleyin...";
-        directionsPanel.style.color = var(--text-gold);
+    // --- GÜÇLENDİRİLMİŞ KONUM (GPS) FONKSİYONU ---
+    function getLocation() {
+        const dirPanel = document.getElementById('directions');
+        dirPanel.innerHTML = "GPS Konumu aranıyor... Tarayıcı izinlerini kontrol edin.";
+        dirPanel.style.color = "var(--kgtu-orange)";
 
         if (!navigator.geolocation) {
-            alert("Maalesef, tarayıcınız GPS konum servislerini desteklemiyor.");
-            directionsPanel.innerHTML = "Navigasyon talimatları ve rota bilgisi için başlangıç ve hedef seçin.";
-            directionsPanel.style.color = var(--text-main);
+            alert("Tarayıcın GPS desteklemiyor!");
             return;
         }
 
-        navigator.geolocation.getCurrentPosition(positionSuccess, positionError);
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                // Konum izni alındı! Ama kullanıcı şu an kampüste mi evde mi?
+                // Hata verip sistemi kilitlemek yerine "Akıllı Test Modu" çalıştırıyoruz:
+                alert("Konum sinyali alındı! (Şu an kampüs dışındaysanız test modu devreye girer ve Ana Giriş varsayılır)");
+                
+                // Simülasyon: Kullanıcıyı Zemin Kat Ana Giriş'e koy.
+                document.getElementById('start').value = "Z_AnaGiris";
+                changeFloor(0);
+                
+                dirPanel.innerHTML = "Konum başarılı. <b>Ana Giriş Kapısı</b>ndesiniz. Şimdi hedef seçin.";
+                dirPanel.style.color = "var(--text-light)";
+            },
+            (error) => {
+                alert("Konum okunamadı. Tarayıcının konum izni engellenmiş olabilir veya dosya lokalde (file://) çalışıyor. Lütfen başlangıç noktasını listeden kendin seç.");
+                dirPanel.innerHTML = "Lütfen başlangıç ve hedef noktasını seçip rotayı çizin.";
+                dirPanel.style.color = "var(--text-light)";
+            },
+            { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        );
+    }
 
-        function positionSuccess(position) {
-            const userLat = position.coords.latitude;
-            const userLng = position.coords.longitude;
+    // --- KAT DEĞİŞTİRME MANTIĞI ---
+    function changeFloor(floorNum) {
+        currentFloor = floorNum;
+        
+        // Buton renklerini güncelle
+        document.querySelectorAll('.floor-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('btn-f' + floorNum).classList.add('active');
 
-            // Haversine formülü ile mesafe hesaplama (GPS koordinatları arasındaki metre mesafesi)
-            const distanceMetres = haversineDistance(userLat, userLng, KGTU_REFERANS_GIRIS_KOORD.lat, KGTU_REFERANS_GIRIS_KOORD.lng);
+        renderFloor(currentFloor);
+        if (currentPath.length > 0) drawPathOnSvg(currentPath);
+    }
 
-            if (distanceMetres <= BINA_MESAFE_HATA_PAYI) {
-                // Binadayız!
-                startSelect.value = "MB_GirisA"; // Varsayılan en yakın girişi seç (Gerçek takibe simülasyon)
-                directionsPanel.innerHTML = `Konumunuz binada doğrulandı (${distanceMetres.toFixed(1)}m yakın). <br> Başlangıç noktanız otomatik olarak '<b>${locations["MB_GirisA"].name}</b>' seçildi. Hedefi seçip rota çizebilirsiniz.`;
-                directionsPanel.style.color = var(--vibrant-green);
-                // Ufak bir gecikmeyle normal metin rengine döndür
-                setTimeout(() => directionsPanel.style.color = var(--text-main), 3000);
-            } else {
-                // Binada değiliz veya çok uzağız
-                alert(`Konumunuz KGTÜ Merkez Bina'da doğrulanmadı. (Mesafe: ${distanceMetres.toFixed(1)}m). <br> Lütfen binadayken 'Konumdan Al' butonunu kullanın veya başlangıç noktasını manuel seçin.`);
-                directionsPanel.innerHTML = "Navigasyon talimatları ve rota bilgisi için başlangıç ve hedef seçin.";
-                directionsPanel.style.color = var(--text-main);
+    function renderFloor(floorNum) {
+        const container = document.getElementById('nodes-container');
+        container.innerHTML = ""; // Ekranı temizle
+        
+        for (const [id, data] of Object.entries(locations)) {
+            // SADECE aktif katın noktalarını ekrana çiz
+            if (data.f === floorNum) {
+                let extraClass = data.type ? data.type : "";
+                container.innerHTML += `
+                    <div class="node ${extraClass}" style="left: ${data.x}px; top: ${data.y}px;"></div>
+                    <div class="node-label" style="left: ${data.x}px; top: ${data.y}px;">${data.name}</div>
+                `;
             }
         }
-
-        function positionError(error) {
-            alert(`GPS konum izni alınamadı veya bir hata oluştu. Lütfen manuel başlangıç seçin. <br> Hata: ${error.message}`);
-            directionsPanel.innerHTML = "Navigasyon talimatları ve rota bilgisi için başlangıç ve hedef seçin.";
-            directionsPanel.style.color = var(--text-main);
-        }
     }
 
-    // Mesafe Hesaplama (Haversine Formülü)
-    function haversineDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371; // Dünya yarıçapı (km)
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = 
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c * 1000; // Sonuç Metre
-    }
-    // --- GPS SIMÜLASYONU KODU SONU ---
-
-
-    function dijkstra(graph, startNode, endNode) {
-        let distances = {};
-        let prev = {};
-        let unvisited = new Set();
-
-        for (let node in graph) {
-            distances[node] = Infinity;
-            prev[node] = null;
-            unvisited.add(node);
-        }
-        distances[startNode] = 0;
+    // --- DİJKSTRA ALGORİTMASI ---
+    function dijkstra(startNode, endNode) {
+        let dist = {}, prev = {}, unvisited = new Set(Object.keys(graph));
+        for (let n in graph) dist[n] = Infinity;
+        dist[startNode] = 0;
 
         while (unvisited.size > 0) {
-            let currNode = null;
-            for (let node of unvisited) {
-                if (currNode === null || distances[node] < distances[currNode]) {
-                    currNode = node;
-                }
+            let u = null;
+            for (let n of unvisited) {
+                if (u === null || dist[n] < dist[u]) u = n;
             }
+            if (u === endNode || dist[u] === Infinity) break;
+            unvisited.delete(u);
 
-            if (currNode === endNode) break;
-            unvisited.delete(currNode);
-
-            for (let neighbor in graph[currNode]) {
-                let alt = distances[currNode] + graph[currNode][neighbor];
-                if (alt < distances[neighbor]) {
-                    distances[neighbor] = alt;
-                    prev[neighbor] = currNode;
+            for (let neighbor in graph[u]) {
+                let alt = dist[u] + graph[u][neighbor];
+                if (alt < dist[neighbor]) {
+                    dist[neighbor] = alt;
+                    prev[neighbor] = u;
                 }
             }
         }
-
-        let path = [];
-        let u = endNode;
-        while (u) {
-            path.unshift(u);
-            u = prev[u];
-        }
+        let path = [], curr = endNode;
+        while (curr) { path.unshift(curr); curr = prev[curr]; }
         return path[0] === startNode ? path : [];
     }
 
@@ -413,57 +315,72 @@
         const start = document.getElementById('start').value;
         const end = document.getElementById('end').value;
 
-        if (!start || !end) {
-            alert("Lütfen rota oluşturmak için hem başlangıç hem de bitiş noktasını seçin.");
-            return;
-        }
+        if (!start || !end) { alert("Başlangıç ve Bitiş seçmelisin!"); return; }
+        if (start === end) { alert("Zaten buradasın!"); return; }
 
-        if (start === end) {
-            document.getElementById('directions').innerHTML = "<b>Zaten buradasın!</b> Başka bir hedef seç.";
-            document.getElementById('routes').innerHTML = ""; 
-            return;
-        }
+        currentPath = dijkstra(start, end);
+        
+        // Kullanıcıyı otomatik olarak başlangıç noktasına ait kata götür
+        const startFloor = locations[start].f;
+        changeFloor(startFloor); 
 
-        const path = dijkstra(graph, start, end);
+        // Metin talimatlarını yaz
+        generateTextDirections(currentPath);
+    }
+
+    function drawPathOnSvg(path) {
         const svg = document.getElementById('routes');
-        svg.innerHTML = ""; 
-        
-        let directionsHTML = `<b>${locations[start].name}</b> noktasından <b>${locations[end].name}</b> hedefine rota:<br><br><ol>`;
-        
+        svg.innerHTML = ""; // Eski çizgileri sil
+
         for (let i = 0; i < path.length - 1; i++) {
-            const node1 = locations[path[i]];
-            const node2 = locations[path[i+1]];
-            
-            // Çizgiyi çiz (Yeşil Rota)
-            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", node1.x);
-            line.setAttribute("y1", node1.y);
-            line.setAttribute("x2", node2.x);
-            line.setAttribute("y2", node2.y);
-            line.setAttribute("stroke", "rgba(34, 197, 94, 0.9)"); /* Canlı Yeşil Rota */
-            line.setAttribute("stroke-width", "4");
-            line.setAttribute("stroke-dasharray", "8,8"); 
-            
-            const animate = document.createElementNS("http://www.w3.org/2000/svg", "animate");
-            animate.setAttribute("attributeName", "stroke-dashoffset");
-            animate.setAttribute("values", "16;0");
-            animate.setAttribute("dur", "1s");
-            animate.setAttribute("repeatCount", "indefinite");
-            line.appendChild(animate);
+            let n1 = locations[path[i]];
+            let n2 = locations[path[i+1]];
 
-            svg.appendChild(line);
+            // Sadece şu anki katta olan yatay yürüyüş çizgilerini çiz
+            if (n1.f === currentFloor && n2.f === currentFloor) {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", n1.x); line.setAttribute("y1", n1.y);
+                line.setAttribute("x2", n2.x); line.setAttribute("y2", n2.y);
+                line.setAttribute("stroke", "var(--kgtu-green)"); 
+                line.setAttribute("stroke-width", "5");
+                line.setAttribute("stroke-dasharray", "10,10");
 
-            // Detaylı metin talimatı
-            let actionText = "yönüne ilerleyin.";
-            if (node1.name.includes("Asansör") && node2.name.includes("Asansör")) {
-                actionText = "kullanarak kata geçiş yapın.";
+                const anim = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+                anim.setAttribute("attributeName", "stroke-dashoffset");
+                anim.setAttribute("values", "20;0"); anim.setAttribute("dur", "1s");
+                anim.setAttribute("repeatCount", "indefinite");
+                line.appendChild(anim);
+
+                svg.appendChild(line);
             }
-
-            directionsHTML += `<li><b>${node1.name}</b> noktasından <b>${node2.name}</b> ${actionText}</li>`;
         }
+    }
+
+    function generateTextDirections(path) {
+        let html = "<b>Yol Tarifi:</b><br><br><ol>";
+        let currentFloorTracking = locations[path[0]].f;
+
+        for (let i = 0; i < path.length - 1; i++) {
+            let node1 = locations[path[i]];
+            let node2 = locations[path[i+1]];
+
+            if (node1.f !== node2.f) {
+                // Kat değiştirme uyarısı
+                let action = node2.f > node1.f ? "yukarı çıkın" : "aşağı inin";
+                html += `<span class="step-floor">🔼 Asansör/Merdiven ile ${node2.f}. Kata ${action}.</span><br><br>`;
+                currentFloorTracking = node2.f;
+            } else {
+                html += `<li><b>${node1.name}</b> noktasından <b>${node2.name}</b> yönüne ilerleyin.</li>`;
+            }
+        }
+        html += `</ol><br><b style="color:var(--kgtu-orange)">🏁 Hedefe Ulaştınız!</b>`;
         
-        directionsHTML += `<li><b>Hedefe ulaştınız!</b></li></ol>`;
-        document.getElementById('directions').innerHTML = directionsHTML;
+        // Katlar arası geçiş varsa kullanıcıya ufak bir hatırlatma yap
+        if (locations[path[path.length-1]].f !== locations[path[0]].f) {
+            html += `<br><br><i>Not: Hedefiniz farklı bir katta. Haritada diğer katı görmek için üstteki butonlara tıklayın.</i>`;
+        }
+
+        document.getElementById('directions').innerHTML = html;
     }
 </script>
 

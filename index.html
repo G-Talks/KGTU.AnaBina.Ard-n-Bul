@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGTÜ İç Mekan Navigasyon</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f8f9fa; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; }
+        .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; align-items: center; }
+        select, button { padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; }
+        button { background-color: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { background-color: #0056b3; }
+        
+        /* Harita Alanı */
+        #map-container { position: relative; width: 100%; height: 500px; background-color: #e9ecef; border: 2px solid #dee2e6; border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
+        
+        /* Arka plan planı eklenecek yer */
+        #map-bg { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: url('https://via.placeholder.com/900x500?text=KGT%C3%9C+Kat+Plan%C4%B1+Buraya+Gelecek') no-repeat center center; background-size: cover; opacity: 0.5; }
+        
+        /* Çizgiler için SVG */
+        #routes { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        
+        /* Noktalar (Sınıflar) */
+        .node { position: absolute; width: 16px; height: 16px; background-color: #dc3545; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5); }
+        .node-label { position: absolute; font-size: 12px; font-weight: bold; background: rgba(255,255,255,0.8); padding: 2px 5px; border-radius: 3px; transform: translate(-50%, 15px); pointer-events: none; }
+        
+        /* Yol Tarifi Paneli */
+        #directions { padding: 15px; background: #e3f2fd; border-left: 5px solid #0d47a1; border-radius: 5px; font-size: 16px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>KGTÜ Navigasyon</h1>
+    
+    <div class="controls">
+        <label for="start">Neredesin?</label>
+        <select id="start"></select>
+        
+        <label for="end">Nereye Gideceksin?</label>
+        <select id="end"></select>
+        
+        <button onclick="calculateRoute()">Rota Çiz</button>
+    </div>
+
+    <div id="map-container">
+        <div id="map-bg"></div>
+        <svg id="routes"></svg>
+        <div id="nodes-container"></div>
+    </div>
+
+    <div id="directions">Lütfen yukarıdan başlangıç ve hedef seçip "Rota Çiz" butonuna bas.</div>
+</div>
+
+<script>
+    // 1. HARİTA KOORDİNATLARI VE AĞ YAPISI (X, Y Pikselleri)
+    const locations = {
+        "A_Giris": { x: 150, y: 400, name: "A Blok Giriş" },
+        "A_Koridor": { x: 150, y: 250, name: "A Blok Koridoru" },
+        "A_101": { x: 50, y: 250, name: "A-101 Dersliği" },
+        "A_102": { x: 150, y: 100, name: "A-102 Dersliği" },
+        "Merkez_Kesisim": { x: 450, y: 250, name: "Ana Hol Kesişimi" },
+        "B_Giris": { x: 450, y: 400, name: "B Blok Giriş" },
+        "B_Kutuphane": { x: 450, y: 100, name: "B Blok Kütüphane" },
+        "C_Giris": { x: 750, y: 400, name: "C Blok Giriş" },
+        "C_Kantin": { x: 750, y: 250, name: "C Blok Kantin" },
+        "C_Lab": { x: 850, y: 250, name: "C Blok Laboratuvar" }
+    };
+
+    // 2. YOLLAR VE MESAFELER (Bağlantılar)
+    const graph = {
+        "A_Giris": { "A_Koridor": 15 },
+        "A_Koridor": { "A_Giris": 15, "A_101": 10, "A_102": 15, "Merkez_Kesisim": 30 },
+        "A_101": { "A_Koridor": 10 },
+        "A_102": { "A_Koridor": 15 },
+        "Merkez_Kesisim": { "A_Koridor": 30, "B_Giris": 15, "B_Kutuphane": 15, "C_Kantin": 30 },
+        "B_Giris": { "Merkez_Kesisim": 15 },
+        "B_Kutuphane": { "Merkez_Kesisim": 15 },
+        "C_Kantin": { "Merkez_Kesisim": 30, "C_Giris": 15, "C_Lab": 10 },
+        "C_Giris": { "C_Kantin": 15 },
+        "C_Lab": { "C_Kantin": 10 }
+    };
+
+    // Sayfa Yüklendiğinde Noktaları Çiz ve Menüleri Doldur
+    window.onload = function() {
+        const startSelect = document.getElementById('start');
+        const endSelect = document.getElementById('end');
+        const nodesContainer = document.getElementById('nodes-container');
+
+        for (const [id, data] of Object.entries(locations)) {
+            // Dropdownları doldur
+            startSelect.innerHTML += `<option value="${id}">${data.name}</option>`;
+            endSelect.innerHTML += `<option value="${id}">${data.name}</option>`;
+
+            // Haritaya noktaları ekle
+            nodesContainer.innerHTML += `
+                <div class="node" style="left: ${data.x}px; top: ${data.y}px;" title="${data.name}"></div>
+                <div class="node-label" style="left: ${data.x}px; top: ${data.y}px;">${data.name}</div>
+            `;
+        }
+        // Hedefi varsayılan olarak B Kütüphane yap
+        endSelect.value = "B_Kutuphane";
+    };
+
+    // 3. DİJKSTRA ALGORİTMASI (En Kısa Yolu Bulan Matematik)
+    function dijkstra(graph, startNode, endNode) {
+        let distances = {};
+        let prev = {};
+        let unvisited = new Set();
+
+        for (let node in graph) {
+            distances[node] = Infinity;
+            prev[node] = null;
+            unvisited.add(node);
+        }
+        distances[startNode] = 0;
+
+        while (unvisited.size > 0) {
+            let currNode = null;
+            for (let node of unvisited) {
+                if (currNode === null || distances[node] < distances[currNode]) {
+                    currNode = node;
+                }
+            }
+
+            if (currNode === endNode) break;
+            unvisited.delete(currNode);
+
+            for (let neighbor in graph[currNode]) {
+                let alt = distances[currNode] + graph[currNode][neighbor];
+                if (alt < distances[neighbor]) {
+                    distances[neighbor] = alt;
+                    prev[neighbor] = currNode;
+                }
+            }
+        }
+
+        let path = [];
+        let u = endNode;
+        while (u) {
+            path.unshift(u);
+            u = prev[u];
+        }
+        return path[0] === startNode ? path : [];
+    }
+
+    // 4. ROTA ÇİZME VE YOL TARİFİ YAZDIRMA
+    function calculateRoute() {
+        const start = document.getElementById('start').value;
+        const end = document.getElementById('end').value;
+
+        if (start === end) {
+            document.getElementById('directions').innerHTML = "<b>Zaten buradasın!</b> Başka bir hedef seç.";
+            document.getElementById('routes').innerHTML = ""; // Çizgileri temizle
+            return;
+        }
+
+        const path = dijkstra(graph, start, end);
+        
+        // SVG Çizgilerini Oluştur
+        const svg = document.getElementById('routes');
+        svg.innerHTML = ""; // Eski rotayı sil
+        
+        let directionsHTML = `<b>${locations[start].name}</b> konumundan <b>${locations[end].name}</b> konumuna yol tarifi:<br><br><ol>`;
+        
+        for (let i = 0; i < path.length - 1; i++) {
+            const node1 = locations[path[i]];
+            const node2 = locations[path[i+1]];
+            
+            // Çizgiyi çiz
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", node1.x);
+            line.setAttribute("y1", node1.y);
+            line.setAttribute("x2", node2.x);
+            line.setAttribute("y2", node2.y);
+            line.setAttribute("stroke", "#007bff"); // Mavi rota çizgisi
+            line.setAttribute("stroke-width", "6");
+            line.setAttribute("stroke-dasharray", "10,10"); // Kesik çizgi efekti
+            
+            svg.appendChild(line);
+
+            // Adım adım tarif
+            directionsHTML += `<li><b>${node1.name}</b> noktasından <b>${node2.name}</b> yönüne doğru ilerle.</li>`;
+        }
+        
+        directionsHTML += `<li><b>Hedefe ulaştın!</b></li></ol>`;
+        document.getElementById('directions').innerHTML = directionsHTML;
+    }
+</script>
+
+</body>
+</html>

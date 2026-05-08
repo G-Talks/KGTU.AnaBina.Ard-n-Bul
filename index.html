@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KGTÜ Üçgen Bina | PRO Navigasyon</title>
+    <title>KGTÜ Üçgen Bina | Kusursuz Navigasyon</title>
     <style>
         /* --- PRO TEMA & DEĞİŞKENLER --- */
         :root {
             --bg-color: #030712; 
-            --panel-bg: rgba(17, 24, 39, 0.9); 
+            --panel-bg: rgba(17, 24, 39, 0.95); 
             --kgtu-green: #10B981; 
             --kgtu-orange: #F97316; 
             --text-main: #F3F4F6;
@@ -26,12 +26,12 @@
 
         /* --- ÜST BİLGİ (HEADER) --- */
         .header {
-            padding: 15px 20px; background: rgba(3, 7, 18, 0.85); 
+            padding: 15px 20px; background: rgba(3, 7, 18, 0.9); 
             backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-light);
             display: flex; justify-content: space-between; align-items: center;
             z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.6);
         }
-        .header h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: 1px; color: var(--text-main);}
+        .header h1 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: 1px; color: var(--text-main);}
         .header h1 b { color: var(--kgtu-green); }
         .live-status { font-size: 12px; display: flex; align-items: center; gap: 6px; color: var(--kgtu-orange); font-weight: bold;}
         .dot { width: 8px; height: 8px; background: var(--kgtu-orange); border-radius: 50%; box-shadow: 0 0 10px var(--kgtu-orange); animation: pulse 1.5s infinite; }
@@ -44,10 +44,9 @@
             background: radial-gradient(circle at 50% 45%, #111827, #030712); 
         }
         
-        /* Birebir ÜÇGEN Mimarisi Çizimi (SVG) */
         .building-outline {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 1000px; height: 700px; pointer-events: none; opacity: 0.3;
+            width: 1000px; height: 700px; pointer-events: none; opacity: 0.4;
         }
 
         #routes, #simulation-layer { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 1000px; height: 700px; pointer-events: none; }
@@ -63,20 +62,19 @@
         .node:hover { transform: translate(-50%, -50%) scale(1.5); background: var(--kgtu-green); box-shadow: 0 0 15px var(--kgtu-green); z-index: 20;}
         
         /* Özel Nokta Türleri */
-        .node.special { background: var(--kgtu-orange); width: 20px; height: 20px; box-shadow: 0 0 15px var(--kgtu-orange); border: 3px solid #000; } /* Merkezler/Kafeler */
-        .node.elevator { background: #3B82F6; border-radius: 4px; width: 16px; height: 16px; border: 2px solid #FFF;} /* Asansörler Kare */
-        .node.entrance { background: #EF4444; width: 16px; height: 16px; border-radius: 50%;} /* Girişler Kırmızı */
+        .node.elevator { background: #3B82F6; border-radius: 4px; width: 18px; height: 18px; border: 2px solid #FFF;} /* Asansörler Kare */
+        .node.entrance { background: #EF4444; width: 18px; height: 18px; border-radius: 50%;} /* Girişler Kırmızı */
         .node.classroom { background: var(--kgtu-green); width: 12px; height: 12px; } /* Derslikler Yeşil */
-        .node.hidden { display: none; } /* Gizli koridor dönemeçleri */
+        .node.academic { background: #A855F7; width: 14px; height: 14px; } /* Hocalar Mor */
+        .node.special { background: var(--kgtu-orange); width: 16px; height: 16px; } /* Fuaye vs */
 
         .node-label { 
             position: absolute; font-size: 11px; background: rgba(17, 24, 39, 0.95); 
-            padding: 5px 10px; border-radius: 6px; border: 1px solid var(--kgtu-green);
+            padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2);
             transform: translate(-50%, 15px); white-space: nowrap; z-index: 11;
-            color: #F3F4F6; font-weight: 600; pointer-events: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            color: #F3F4F6; font-weight: 500; pointer-events: none;
         }
-        .node:hover + .node-label { background: var(--kgtu-green); color: #000; z-index: 21;}
+        .node:hover + .node-label { background: var(--kgtu-green); color: #000; z-index: 21; border-color: #000; font-weight: bold;}
 
         /* Simülasyon İkonu */
         #sim-avatar {
@@ -89,35 +87,35 @@
         /* --- ALT KONTROL PANELİ --- */
         .bottom-panel {
             background: var(--panel-bg); backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border-light); padding: 25px 20px;
+            border-top: 1px solid var(--border-light); padding: 20px;
             z-index: 100; box-shadow: 0 -10px 40px rgba(0,0,0,0.7);
         }
 
-        .floor-tabs { display: flex; background: rgba(0,0,0,0.6); border-radius: 12px; padding: 6px; margin-bottom: 20px; border: 1px solid var(--border-light);}
+        .floor-tabs { display: flex; background: rgba(0,0,0,0.6); border-radius: 10px; padding: 5px; margin-bottom: 15px; border: 1px solid var(--border-light); gap: 5px;}
         .floor-tabs button {
-            flex: 1; padding: 12px; background: transparent; border: none; 
-            color: var(--text-muted); font-weight: 600; font-size: 15px; border-radius: 8px; transition: 0.3s; cursor: pointer;
+            flex: 1; padding: 10px 5px; background: transparent; border: none; 
+            color: var(--text-muted); font-weight: 600; font-size: 13px; border-radius: 6px; transition: 0.3s; cursor: pointer;
         }
         .floor-tabs button.active { background: var(--kgtu-green); color: #030712; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);}
 
-        .input-group { display: flex; gap: 12px; margin-bottom: 15px; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 10px; }
         select {
-            flex: 1; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 500;
+            flex: 1; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 500;
             background: #1F2937; border: 1px solid rgba(255,255,255,0.1); color: white; outline: none;
             appearance: none; 
         }
         select:focus { border-color: var(--kgtu-green); }
         
-        .action-btns { display: flex; gap: 12px; margin-top: 10px;}
-        .btn { flex: 1; padding: 15px; border-radius: 10px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s;}
+        .action-btns { display: flex; gap: 10px; margin-top: 10px;}
+        .btn { flex: 1; padding: 14px; border-radius: 8px; border: none; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s;}
         .btn-route { background: var(--kgtu-green); color: #030712; }
         .btn-route:hover { background: #059669; }
         .btn-sim { background: var(--kgtu-orange); color: #030712; display: none; }
 
         #directions-text { 
-            margin-top: 20px; font-size: 14px; color: var(--text-muted); 
-            line-height: 1.6; max-height: 120px; overflow-y: auto; 
-            padding-right: 10px; border-left: 3px solid var(--kgtu-green); padding-left: 15px;
+            margin-top: 15px; font-size: 13px; color: var(--text-muted); 
+            line-height: 1.6; max-height: 100px; overflow-y: auto; 
+            padding-right: 10px; border-left: 3px solid var(--kgtu-green); padding-left: 12px;
         }
         #directions-text b { color: var(--text-main); }
         
@@ -134,13 +132,10 @@
 
     <div id="map-area">
         <svg class="building-outline" viewBox="0 0 1000 700">
-            <polygon points="500,40 150,560 850,560" fill="rgba(16, 185, 129, 0.03)" stroke="rgba(255, 255, 255, 0.2)" stroke-width="4"/>
-            <polygon points="500,280 380,450 620,450" fill="rgba(3, 7, 18, 1)" stroke="rgba(255, 255, 255, 0.1)" stroke-width="2"/>
+            <polygon points="500,60 150,560 850,560" fill="rgba(16, 185, 129, 0.02)" stroke="rgba(255, 255, 255, 0.15)" stroke-width="4"/>
+            <polygon points="500,240 330,480 670,480" fill="rgba(3, 7, 18, 1)" stroke="rgba(255, 255, 255, 0.1)" stroke-width="2"/>
             
-            <polyline points="500,140 250,500 750,500 500,140" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="40" stroke-linejoin="round"/>
-            <line x1="500" y1="360" x2="335" y2="380" stroke="rgba(255, 255, 255, 0.04)" stroke-width="30"/>
-            <line x1="500" y1="360" x2="665" y2="380" stroke="rgba(255, 255, 255, 0.04)" stroke-width="30"/>
-            <line x1="500" y1="360" x2="500" y2="500" stroke="rgba(255, 255, 255, 0.04)" stroke-width="30"/>
+            <polygon points="500,140 250,500 750,500" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="40" stroke-linejoin="round"/>
         </svg>
 
         <svg id="routes"></svg>
@@ -150,9 +145,10 @@
 
     <div class="bottom-panel">
         <div class="floor-tabs">
-            <button class="active" onclick="changeFloor(0)" id="btn-f0">Zemin Kat</button>
+            <button class="active" onclick="changeFloor(0)" id="btn-f0">Zemin</button>
             <button onclick="changeFloor(1)" id="btn-f1">1. Kat</button>
             <button onclick="changeFloor(2)" id="btn-f2">2. Kat</button>
+            <button onclick="changeFloor(3)" id="btn-f3">3. Kat (Hocalar)</button>
         </div>
 
         <div class="input-group">
@@ -164,144 +160,121 @@
 
         <div class="action-btns">
             <button class="btn btn-route" onclick="calculateRoute()">Rotayı Çiz</button>
-            <button class="btn btn-sim" id="sim-btn" onclick="startSimulation()">▶ Yürüt</button>
+            <button class="btn btn-sim" id="sim-btn" onclick="startSimulation()">▶ Simüle Et</button>
         </div>
 
-        <div id="directions-text">Merkezde asansör yoktur, üst katlara çıkmak için köşelerdeki (giriş yanındaki) asansörlere gitmelisiniz.</div>
+        <div id="directions-text">Merkezde kafeler yoktur. Tüm derslik, laboratuvar ve ofisler üçgen koridorlar (ring) üzerine dizilmiştir.</div>
     </div>
 
 <script>
-    // --- BİREBİR ÜÇGEN KOORDİNATLARI ---
-    // Üst Köşe: (500, 140)
-    // Sol Alt Köşe: (250, 500)
-    // Sağ Alt Köşe: (750, 500)
-    // Merkez: (500, 360)
+    // --- BİREBİR ÜÇGEN KOORDİNATLARI (Tam Ring Sistemi) ---
+    // A Köşesi: (500, 140)
+    // B Köşesi: (250, 500)
+    // C Köşesi: (750, 500)
+    // Sol Kenar: (416, 260) ve (333, 380)
+    // Alt Kenar: (416, 500) ve (583, 500)
+    // Sağ Kenar: (666, 380) ve (583, 260)
     
     const locations = {
         // === ZEMİN KAT (f: 0) ===
-        // Girişler (Uç Noktalar)
-        "Z_GirisA": { x: 500, y: 80, f: 0, name: "Kuzey Ana Giriş (A)", type: "entrance" },
-        "Z_GirisB": { x: 190, y: 500, f: 0, name: "Güneybatı Girişi (B)", type: "entrance" },
-        "Z_GirisC": { x: 810, y: 500, f: 0, name: "Güneydoğu Girişi (C)", type: "entrance" },
+        "Z_GirisA": { x: 500, y: 70, f: 0, name: "Kuzey Ana Giriş (A)", type: "entrance" },
+        "Z_GirisB": { x: 180, y: 500, f: 0, name: "Güneybatı Girişi (B)", type: "entrance" },
+        "Z_GirisC": { x: 820, y: 500, f: 0, name: "Güneydoğu Girişi (C)", type: "entrance" },
         
-        // Asansörler (Girişlerin hemen 5 metre yanında, köşelerde)
         "Z_AsansorA": { x: 500, y: 140, f: 0, name: "A Blok Asansörü (Kuzey)", type: "elevator" },
         "Z_AsansorB": { x: 250, y: 500, f: 0, name: "B Blok Asansörü (Sol Alt)", type: "elevator" },
         "Z_AsansorC": { x: 750, y: 500, f: 0, name: "C Blok Asansörü (Sağ Alt)", type: "elevator" },
         
-        // Zemin Kat Derslikler ve Alanlar (Kenarlar Üzerinde)
-        "Z_Amfi1": { x: 417, y: 260, f: 0, name: "Büyük Amfi 1", type: "classroom" },
-        "Z_Amfi2": { x: 583, y: 260, f: 0, name: "Büyük Amfi 2", type: "classroom" },
+        "Z_Amfi1": { x: 416, y: 260, f: 0, name: "Büyük Amfi 1", type: "classroom" },
+        "Z_Amfi2": { x: 333, y: 380, f: 0, name: "Büyük Amfi 2", type: "classroom" },
         "Z_OgrenciIsleri": { x: 416, y: 500, f: 0, name: "Öğrenci İşleri" },
         "Z_Kutuphane": { x: 583, y: 500, f: 0, name: "Merkez Kütüphane" },
-        
-        // Zemin Kat Merkez Alan
-        "Z_Fuaye": { x: 500, y: 360, f: 0, name: "Ana Fuaye (Merkez)", type: "special" },
+        "Z_Yemekhane": { x: 666, y: 380, f: 0, name: "Yemekhane" },
+        "Z_Kantin": { x: 583, y: 260, f: 0, name: "Zemin Kantin" },
+        "Z_Fuaye": { x: 500, y: 360, f: 0, name: "Zemin Fuaye", type: "special" }, // Sadece zeminde avlu geçişi var
 
-        // Gizli Kavşaklar (Yolların düzgün çizilmesi için)
-        "Z_KavsakL2": { x: 335, y: 380, f: 0, name: "Sol Koridor Ayrımı", type: "hidden", hideInMenu: true },
-        "Z_KavsakR2": { x: 665, y: 380, f: 0, name: "Sağ Koridor Ayrımı", type: "hidden", hideInMenu: true },
-        "Z_KavsakB": { x: 500, y: 500, f: 0, name: "Alt Koridor Ayrımı", type: "hidden", hideInMenu: true },
-
-
-        // === 1. KAT (f: 1) - DERSLİKLER VE NEO CAFE ===
-        // Asansörler aynı konumlarda
+        // === 1. KAT (f: 1) - DERSLİKLER 101-120 ===
         "K1_AsansorA": { x: 500, y: 140, f: 1, name: "A Blok Asansörü", type: "elevator" },
+        "K1_D101_104": { x: 416, y: 260, f: 1, name: "Derslik 101-104", type: "classroom" },
+        "K1_D105_108": { x: 333, y: 380, f: 1, name: "Derslik 105-108", type: "classroom" },
         "K1_AsansorB": { x: 250, y: 500, f: 1, name: "B Blok Asansörü", type: "elevator" },
+        "K1_MBGLab1": { x: 416, y: 500, f: 1, name: "Derslik 109-112 (MBG Lab 1)", type: "classroom" },
+        "K1_MBGLab2": { x: 583, y: 500, f: 1, name: "Derslik 113-115 (MBG Lab 2)", type: "classroom" },
         "K1_AsansorC": { x: 750, y: 500, f: 1, name: "C Blok Asansörü", type: "elevator" },
+        "K1_D116_118": { x: 666, y: 380, f: 1, name: "Derslik 116-118", type: "classroom" },
+        "K1_D119_120": { x: 583, y: 260, f: 1, name: "Derslik 119-120 (Lablar)", type: "classroom" },
 
-        // Merkez Kafe (Ortada asansör yok)
-        "K1_NeoCafe": { x: 500, y: 360, f: 1, name: "Neo Cafe (Merkez Alan)", type: "special" },
-
-        // 1. Kat Derslikleri (Kenarlarda)
-        "K1_MBG1": { x: 417, y: 260, f: 1, name: "MBG Laboratuvarı 1", type: "classroom" },
-        "K1_MBG2": { x: 335, y: 380, f: 1, name: "MBG Laboratuvarı 2", type: "classroom" }, // Sol Kavşak Noktasında
-        "K1_D101": { x: 583, y: 260, f: 1, name: "Derslik 101", type: "classroom" },
-        "K1_D102": { x: 665, y: 380, f: 1, name: "Derslik 102", type: "classroom" }, // Sağ Kavşak Noktasında
-        "K1_D103": { x: 416, y: 500, f: 1, name: "Derslik 103", type: "classroom" },
-        "K1_D104": { x: 500, y: 500, f: 1, name: "Derslik 104", type: "classroom" }, // Alt Kavşak Noktasında
-        "K1_D105": { x: 583, y: 500, f: 1, name: "Derslik 105", type: "classroom" },
-
-
-        // === 2. KAT (f: 2) - DERSLİKLER VE NEO MUTFAK ===
+        // === 2. KAT (f: 2) - DERSLİKLER 201-220 ===
         "K2_AsansorA": { x: 500, y: 140, f: 2, name: "A Blok Asansörü", type: "elevator" },
+        "K2_D201_204": { x: 416, y: 260, f: 2, name: "Derslik 201-204", type: "classroom" },
+        "K2_D205_208": { x: 333, y: 380, f: 2, name: "Derslik 205-208", type: "classroom" },
         "K2_AsansorB": { x: 250, y: 500, f: 2, name: "B Blok Asansörü", type: "elevator" },
+        "K2_D209_212": { x: 416, y: 500, f: 2, name: "Derslik 209-212", type: "classroom" },
+        "K2_D213_215": { x: 583, y: 500, f: 2, name: "Derslik 213-215", type: "classroom" },
         "K2_AsansorC": { x: 750, y: 500, f: 2, name: "C Blok Asansörü", type: "elevator" },
+        "K2_D216_218": { x: 666, y: 380, f: 2, name: "Derslik 216-218", type: "classroom" },
+        "K2_D219_220": { x: 583, y: 260, f: 2, name: "Derslik 219-220", type: "classroom" },
 
-        // Merkez Mutfak (Ortada asansör yok)
-        "K2_NeoMutfak": { x: 500, y: 360, f: 2, name: "Neo Mutfak (Merkez Alan)", type: "special" },
-
-        // 2. Kat Derslikleri
-        "K2_D201": { x: 417, y: 260, f: 2, name: "Derslik 201", type: "classroom" },
-        "K2_D202": { x: 335, y: 380, f: 2, name: "Derslik 202", type: "classroom" },
-        "K2_D203": { x: 583, y: 260, f: 2, name: "Derslik 203", type: "classroom" },
-        "K2_D204": { x: 665, y: 380, f: 2, name: "Derslik 204", type: "classroom" },
-        "K2_Mimarlik": { x: 416, y: 500, f: 2, name: "Mimarlık Atölyesi", type: "classroom" },
-        "K2_Bilgisayar": { x: 500, y: 500, f: 2, name: "Bilgisayar Laboratuvarı", type: "classroom" },
-        "K2_D205": { x: 583, y: 500, f: 2, name: "Derslik 205", type: "classroom" }
+        // === 3. KAT (f: 3) - HOCALAR / AKADEMİK ===
+        "K3_AsansorA": { x: 500, y: 140, f: 3, name: "A Blok Asansörü", type: "elevator" },
+        "K3_MBGHocalar": { x: 416, y: 260, f: 3, name: "MBG Bölüm Başkanlığı", type: "academic" },
+        "K3_GidaHocalar": { x: 333, y: 380, f: 3, name: "Gıda Müh. Hocaları", type: "academic" },
+        "K3_AsansorB": { x: 250, y: 500, f: 3, name: "B Blok Asansörü", type: "elevator" },
+        "K3_Toplanti1": { x: 416, y: 500, f: 3, name: "Toplantı Salonu 1", type: "academic" },
+        "K3_Toplanti2": { x: 583, y: 500, f: 3, name: "Toplantı Salonu 2", type: "academic" },
+        "K3_AsansorC": { x: 750, y: 500, f: 3, name: "C Blok Asansörü", type: "elevator" },
+        "K3_Dekanlik": { x: 666, y: 380, f: 3, name: "Fakülte Dekanlığı", type: "academic" },
+        "K3_Yonetim": { x: 583, y: 260, f: 3, name: "İdari Yönetim", type: "academic" }
     };
 
-    // --- ÜÇGEN BAĞLANTI AĞI (GRAPH) ---
-    // Sadece kenarlar (A-B, B-C, C-A) ve kenar ortalarından merkeze yollar var.
-    // Ortadan yukarı çıkış KESİNLİKLE YOK! (Kullanıcı köşelere yürümek zorunda)
+    // --- MÜKEMMEL ÜÇGEN AĞI (Sadece Kenarlar) ---
     const graph = {
-        // --- ZEMİN KAT YATAY AĞ ---
-        "Z_GirisA": { "Z_AsansorA": 5 },
-        "Z_GirisB": { "Z_AsansorB": 5 },
-        "Z_GirisC": { "Z_AsansorC": 5 },
+        // --- ZEMİN KAT ---
+        "Z_GirisA": { "Z_AsansorA": 5 }, "Z_GirisB": { "Z_AsansorB": 5 }, "Z_GirisC": { "Z_AsansorC": 5 },
+        // Ring
+        "Z_AsansorA": { "Z_GirisA": 5, "Z_Amfi1": 15, "Z_Kantin": 15, "K1_AsansorA": 30, "Z_Fuaye": 20 },
+        "Z_Amfi1": { "Z_AsansorA": 15, "Z_Amfi2": 15 },
+        "Z_Amfi2": { "Z_Amfi1": 15, "Z_AsansorB": 15 },
+        "Z_AsansorB": { "Z_GirisB": 5, "Z_Amfi2": 15, "Z_OgrenciIsleri": 15, "K1_AsansorB": 30, "Z_Fuaye": 20 },
+        "Z_OgrenciIsleri": { "Z_AsansorB": 15, "Z_Kutuphane": 15 },
+        "Z_Kutuphane": { "Z_OgrenciIsleri": 15, "Z_AsansorC": 15 },
+        "Z_AsansorC": { "Z_GirisC": 5, "Z_Kutuphane": 15, "Z_Yemekhane": 15, "K1_AsansorC": 30, "Z_Fuaye": 20 },
+        "Z_Yemekhane": { "Z_AsansorC": 15, "Z_Kantin": 15 },
+        "Z_Kantin": { "Z_Yemekhane": 15, "Z_AsansorA": 15 },
+        "Z_Fuaye": { "Z_AsansorA": 20, "Z_AsansorB": 20, "Z_AsansorC": 20 }, // Sadece zeminde ortadan geçiş var
 
-        // Sol Kenar (A'dan B'ye)
-        "Z_AsansorA": { "Z_GirisA": 5, "Z_Amfi1": 15, "Z_Amfi2": 15, "K1_AsansorA": 30 }, // Kat çıkışı köşeden
-        "Z_Amfi1": { "Z_AsansorA": 15, "Z_KavsakL2": 15 },
-        "Z_KavsakL2": { "Z_Amfi1": 15, "Z_AsansorB": 15, "Z_Fuaye": 20 },
-        "Z_AsansorB": { "Z_GirisB": 5, "Z_KavsakL2": 15, "Z_OgrenciIsleri": 15, "K1_AsansorB": 30 }, // Kat çıkışı köşeden
+        // --- 1. KAT ---
+        "K1_AsansorA": { "Z_AsansorA": 30, "K1_D101_104": 15, "K1_D119_120": 15, "K2_AsansorA": 30 },
+        "K1_D101_104": { "K1_AsansorA": 15, "K1_D105_108": 15 },
+        "K1_D105_108": { "K1_D101_104": 15, "K1_AsansorB": 15 },
+        "K1_AsansorB": { "Z_AsansorB": 30, "K1_D105_108": 15, "K1_MBGLab1": 15, "K2_AsansorB": 30 },
+        "K1_MBGLab1": { "K1_AsansorB": 15, "K1_MBGLab2": 15 },
+        "K1_MBGLab2": { "K1_MBGLab1": 15, "K1_AsansorC": 15 },
+        "K1_AsansorC": { "Z_AsansorC": 30, "K1_MBGLab2": 15, "K1_D116_118": 15, "K2_AsansorC": 30 },
+        "K1_D116_118": { "K1_AsansorC": 15, "K1_D119_120": 15 },
+        "K1_D119_120": { "K1_D116_118": 15, "K1_AsansorA": 15 },
 
-        // Sağ Kenar (A'dan C'ye)
-        "Z_Amfi2": { "Z_AsansorA": 15, "Z_KavsakR2": 15 },
-        "Z_KavsakR2": { "Z_Amfi2": 15, "Z_AsansorC": 15, "Z_Fuaye": 20 },
-        "Z_AsansorC": { "Z_GirisC": 5, "Z_KavsakR2": 15, "Z_Kutuphane": 15, "K1_AsansorC": 30 }, // Kat çıkışı köşeden
+        // --- 2. KAT ---
+        "K2_AsansorA": { "K1_AsansorA": 30, "K2_D201_204": 15, "K2_D219_220": 15, "K3_AsansorA": 30 },
+        "K2_D201_204": { "K2_AsansorA": 15, "K2_D205_208": 15 },
+        "K2_D205_208": { "K2_D201_204": 15, "K2_AsansorB": 15 },
+        "K2_AsansorB": { "K1_AsansorB": 30, "K2_D205_208": 15, "K2_D209_212": 15, "K3_AsansorB": 30 },
+        "K2_D209_212": { "K2_AsansorB": 15, "K2_D213_215": 15 },
+        "K2_D213_215": { "K2_D209_212": 15, "K2_AsansorC": 15 },
+        "K2_AsansorC": { "K1_AsansorC": 30, "K2_D213_215": 15, "K2_D216_218": 15, "K3_AsansorC": 30 },
+        "K2_D216_218": { "K2_AsansorC": 15, "K2_D219_220": 15 },
+        "K2_D219_220": { "K2_D216_218": 15, "K2_AsansorA": 15 },
 
-        // Alt Kenar (B'den C'ye)
-        "Z_OgrenciIsleri": { "Z_AsansorB": 15, "Z_KavsakB": 10 },
-        "Z_KavsakB": { "Z_OgrenciIsleri": 10, "Z_Kutuphane": 10, "Z_Fuaye": 20 },
-        "Z_Kutuphane": { "Z_KavsakB": 10, "Z_AsansorC": 15 },
-
-        // Merkez (Sadece Yatay yürüyüş, dikey çıkış YOK)
-        "Z_Fuaye": { "Z_KavsakL2": 20, "Z_KavsakR2": 20, "Z_KavsakB": 20 },
-
-
-        // --- 1. KAT YATAY AĞ ---
-        "K1_AsansorA": { "Z_AsansorA": 30, "K1_MBG1": 15, "K1_D101": 15, "K2_AsansorA": 30 },
-        "K1_MBG1": { "K1_AsansorA": 15, "K1_MBG2": 15 },
-        "K1_MBG2": { "K1_MBG1": 15, "K1_AsansorB": 15, "K1_NeoCafe": 20 },
-        "K1_AsansorB": { "Z_AsansorB": 30, "K1_MBG2": 15, "K1_D103": 15, "K2_AsansorB": 30 },
-
-        "K1_D101": { "K1_AsansorA": 15, "K1_D102": 15 },
-        "K1_D102": { "K1_D101": 15, "K1_AsansorC": 15, "K1_NeoCafe": 20 },
-        "K1_AsansorC": { "Z_AsansorC": 30, "K1_D102": 15, "K1_D105": 15, "K2_AsansorC": 30 },
-
-        "K1_D103": { "K1_AsansorB": 15, "K1_D104": 10 },
-        "K1_D104": { "K1_D103": 10, "K1_D105": 10, "K1_NeoCafe": 20 },
-        "K1_D105": { "K1_D104": 10, "K1_AsansorC": 15 },
-
-        "K1_NeoCafe": { "K1_MBG2": 20, "K1_D102": 20, "K1_D104": 20 },
-
-
-        // --- 2. KAT YATAY AĞ ---
-        "K2_AsansorA": { "K1_AsansorA": 30, "K2_D201": 15, "K2_D203": 15 },
-        "K2_D201": { "K2_AsansorA": 15, "K2_D202": 15 },
-        "K2_D202": { "K2_D201": 15, "K2_AsansorB": 15, "K2_NeoMutfak": 20 },
-        "K2_AsansorB": { "K1_AsansorB": 30, "K2_D202": 15, "K2_Mimarlik": 15 },
-
-        "K2_D203": { "K2_AsansorA": 15, "K2_D204": 15 },
-        "K2_D204": { "K2_D203": 15, "K2_AsansorC": 15, "K2_NeoMutfak": 20 },
-        "K2_AsansorC": { "K1_AsansorC": 30, "K2_D204": 15, "K2_D205": 15 },
-
-        "K2_Mimarlik": { "K2_AsansorB": 15, "K2_Bilgisayar": 10 },
-        "K2_Bilgisayar": { "K2_Mimarlik": 10, "K2_D205": 10, "K2_NeoMutfak": 20 },
-        "K2_D205": { "K2_Bilgisayar": 10, "K2_AsansorC": 15 },
-
-        "K2_NeoMutfak": { "K2_D202": 20, "K2_D204": 20, "K2_Bilgisayar": 20 }
+        // --- 3. KAT ---
+        "K3_AsansorA": { "K2_AsansorA": 30, "K3_MBGHocalar": 15, "K3_Yonetim": 15 },
+        "K3_MBGHocalar": { "K3_AsansorA": 15, "K3_GidaHocalar": 15 },
+        "K3_GidaHocalar": { "K3_MBGHocalar": 15, "K3_AsansorB": 15 },
+        "K3_AsansorB": { "K2_AsansorB": 30, "K3_GidaHocalar": 15, "K3_Toplanti1": 15 },
+        "K3_Toplanti1": { "K3_AsansorB": 15, "K3_Toplanti2": 15 },
+        "K3_Toplanti2": { "K3_Toplanti1": 15, "K3_AsansorC": 15 },
+        "K3_AsansorC": { "K2_AsansorC": 30, "K3_Toplanti2": 15, "K3_Dekanlik": 15 },
+        "K3_Dekanlik": { "K3_AsansorC": 15, "K3_Yonetim": 15 },
+        "K3_Yonetim": { "K3_Dekanlik": 15, "K3_AsansorA": 15 }
     };
 
     let currentFloor = 0;
@@ -313,20 +286,20 @@
     function populateSelects() {
         const start = document.getElementById('start');
         const end = document.getElementById('end');
-        let groups = { 0: "", 1: "", 2: "" };
+        let groups = { 0: "", 1: "", 2: "", 3: "" };
         
         start.innerHTML = `<option value="" disabled selected>Başlangıç Konumu?</option>`;
         end.innerHTML = `<option value="" disabled selected>Hedef Konum?</option>`;
 
         for (const [id, data] of Object.entries(locations)) {
-            if (!data.hideInMenu) {
-                groups[data.f] += `<option value="${id}">${data.name}</option>`;
-            }
+            groups[data.f] += `<option value="${id}">${data.name}</option>`;
         }
         
-        const formatGroups = `<optgroup label="-- ZEMİN KAT --">${groups[0]}</optgroup>
-                              <optgroup label="-- 1. KAT --">${groups[1]}</optgroup>
-                              <optgroup label="-- 2. KAT --">${groups[2]}</optgroup>`;
+        const formatGroups = `
+            <optgroup label="-- ZEMİN KAT --">${groups[0]}</optgroup>
+            <optgroup label="-- 1. KAT (101-120) --">${groups[1]}</optgroup>
+            <optgroup label="-- 2. KAT (201-220) --">${groups[2]}</optgroup>
+            <optgroup label="-- 3. KAT (Hocalar) --">${groups[3]}</optgroup>`;
         
         start.innerHTML += formatGroups; end.innerHTML += formatGroups;
     }
@@ -348,12 +321,10 @@
                 let classes = "node";
                 if (data.type) classes += " " + data.type;
                 
-                if (!data.hideInMenu) {
-                    container.innerHTML += `
-                        <div class="${classes}" style="left: ${data.x}px; top: ${data.y}px;" onclick="document.getElementById('end').value='${id}'"></div>
-                        <div class="node-label" style="left: ${data.x}px; top: ${data.y}px;">${data.name}</div>
-                    `;
-                }
+                container.innerHTML += `
+                    <div class="${classes}" style="left: ${data.x}px; top: ${data.y}px;" onclick="document.getElementById('end').value='${id}'"></div>
+                    <div class="node-label" style="left: ${data.x}px; top: ${data.y}px;">${data.name}</div>
+                `;
             }
         }
     }
@@ -421,14 +392,12 @@
             
             if (n1.f !== n2.f) {
                 let action = n2.f > n1.f ? "yukarı çıkın ⬆️" : "aşağı inin ⬇️";
-                html += `<span style="color:var(--kgtu-orange); display:block; margin:10px 0; font-weight:bold;">🏢 Köşedeki Asansörü kullanarak ${n2.f}. Kata ${action}.</span>`;
+                html += `<span style="color:var(--kgtu-orange); display:block; margin:8px 0; font-weight:bold;">🏢 Asansör ile ${n2.f}. Kata ${action}.</span>`;
             } else {
-                if(!n2.hideInMenu) {
-                    html += `• Koridordan <b>${n2.name}</b> yönüne ilerleyin.<br>`;
-                }
+                html += `• Üçgen koridordan <b>${n2.name}</b> yönüne ilerleyin.<br>`;
             }
         }
-        html += `<br><span style="color:var(--kgtu-green); font-weight:bold; font-size:16px;">📍 Hedefe Ulaştınız!</span>`;
+        html += `<br><span style="color:var(--kgtu-green); font-weight:bold; font-size:15px;">📍 Hedefe Ulaştınız!</span>`;
         document.getElementById('directions-text').innerHTML = html;
     }
 

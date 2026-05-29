@@ -46,29 +46,44 @@
         .pulse-dot { width: 8px; height: 8px; background: var(--secondary); border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(249, 115, 22, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); } }
 
-        /* --- HARİTA ALANI --- */
+        /* --- KAYA GİBİ SAĞLAM HARİTA ALANI (Çökme Yapmaz) --- */
         #map-viewport { flex: 1; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 50%, #111827, #030712); display: flex; justify-content: center; align-items: center; padding: 10px; }
-        #map-layer { position: relative; width: 100%; height: auto; max-width: 1000px; max-height: 100%; aspect-ratio: 10 / 8; }
+        
+        #map-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 900px; /* Maksimum genişlik */
+            /* 1000x800 oranını korumak için Padding Hack */
+            padding-bottom: 80%; 
+            margin: 0 auto;
+        }
+
+        #map-layer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
         .blueprint, .routes-svg, #nodes-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         .blueprint { opacity: 0.5; overflow: visible; }
         .routes-svg { z-index: 5; overflow: visible; }
         #nodes-layer { z-index: 10; pointer-events: auto; }
         
         /* NOKTALAR (Yüzdesel) */
-        .node { position: absolute; width: 1.6%; height: 2%; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; border: 2px solid var(--bg-color); z-index: 10; transition: 0.2s; pointer-events: auto; box-shadow: 0 0 5px rgba(0,0,0,0.5);}
+        .node { position: absolute; width: 2%; height: 2.5%; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; border: 2px solid var(--bg-color); z-index: 10; transition: 0.2s; pointer-events: auto; box-shadow: 0 0 5px rgba(0,0,0,0.5);}
         .node:hover { transform: translate(-50%, -50%) scale(1.5); box-shadow: 0 0 15px var(--primary); z-index: 20;}
         
-        .node.elevator { background: #E2E8F0; border-radius: 50%; width: 2.2%; height: 2.75%; border: 3px solid #3B82F6; box-shadow: 0 0 10px rgba(59,130,246,0.5);} 
+        .node.elevator { background: #E2E8F0; border-radius: 50%; width: 2.5%; height: 3.1%; border: 2px solid #3B82F6; box-shadow: 0 0 10px rgba(59,130,246,0.5);} 
         .node.entrance { background: #EF4444; width: 2%; height: 2.5%; }
         .node.classroom { background: var(--primary); }
         .node.academic { background: #A855F7; }
-        .node.special { background: var(--secondary); width: 2.4%; height: 3%; border: 3px solid #000; box-shadow: 0 0 15px var(--secondary);}
-        .node.coffee { background: var(--coffee); width: 2.4%; height: 3%; border: 3px solid #000; box-shadow: 0 0 15px var(--coffee);}
-        .node.kitchen { background: var(--kitchen); width: 2.4%; height: 3%; border: 3px solid #000; box-shadow: 0 0 15px var(--kitchen);}
+        .node.special { background: var(--secondary); width: 3%; height: 3.75%; border: 2px solid #000; box-shadow: 0 0 15px var(--secondary);}
+        .node.coffee { background: var(--coffee); width: 3%; height: 3.75%; border: 2px solid #000; box-shadow: 0 0 15px var(--coffee);}
+        .node.kitchen { background: var(--kitchen); width: 3%; height: 3.75%; border: 2px solid #000; box-shadow: 0 0 15px var(--kitchen);}
         
-        .node-label { position: absolute; background: rgba(3, 7, 18, 0.95); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-light); color: var(--text-main); font-size: clamp(8px, 1.5vw, 12px); font-weight: 600; transform: translate(-50%, 18px); pointer-events: none; white-space: nowrap; z-index: 15; box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
+        .node-label { position: absolute; background: rgba(3, 7, 18, 0.95); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-light); color: var(--text-main); font-size: clamp(9px, 1.2vw, 12px); font-weight: 600; transform: translate(-50%, 15px); pointer-events: none; white-space: nowrap; z-index: 15; box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
 
-        #avatar { position: absolute; width: 3.4%; height: 4.25%; background: #FFF; border-radius: 50%; transform: translate(-50%, -50%); display: none; z-index: 50; text-align: center; font-size: clamp(12px, 2vw, 18px); box-shadow: 0 0 20px #FFF; transition: left 0.6s linear, top 0.6s linear; display: flex; align-items: center; justify-content: center; }
+        #avatar { position: absolute; width: 4%; height: 5%; background: #FFF; border-radius: 50%; transform: translate(-50%, -50%); display: none; z-index: 50; text-align: center; font-size: clamp(12px, 2vw, 18px); box-shadow: 0 0 20px #FFF; transition: left 0.6s linear, top 0.6s linear; display: flex; align-items: center; justify-content: center; }
 
         /* SIM OVERLAY */
         #sim-overlay { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(16, 185, 129, 0.1); border: 1px solid var(--primary); padding: 10px 20px; border-radius: 20px; color: var(--primary); font-weight: bold; font-size: 14px; box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); backdrop-filter: blur(10px); opacity: 0; visibility: hidden; transition: 0.3s; z-index: 60; display: flex; align-items: center; gap: 8px; }
@@ -78,42 +93,43 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* --- ALT KONTROL PANELİ --- */
-        .dashboard { background: var(--surface-color); padding: 20px 25px; z-index: 100; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--border-light); box-shadow: 0 -10px 40px rgba(0,0,0,0.8);}
-        .floor-tabs { display: flex; background: rgba(0,0,0,0.8); border-radius: 12px; padding: 6px; gap: 6px; border: 1px solid var(--border-light);}
-        .floor-tabs button { flex: 1; padding: 12px 5px; background: transparent; border: none; color: var(--text-muted); font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: clamp(11px, 2vw, 13px);}
+        .dashboard { background: var(--surface-color); padding: 15px 20px; z-index: 100; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border-light); box-shadow: 0 -10px 40px rgba(0,0,0,0.8);}
+        .floor-tabs { display: flex; background: rgba(0,0,0,0.8); border-radius: 12px; padding: 4px; gap: 4px; border: 1px solid var(--border-light);}
+        .floor-tabs button { flex: 1; padding: 10px 5px; background: transparent; border: none; color: var(--text-muted); font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: clamp(10px, 1.5vw, 13px);}
         .floor-tabs button.active { background: var(--primary); color: #000; box-shadow: 0 0 15px rgba(16,185,129,0.3);}
 
-        /* CANLI ARAMA (LIVE SEARCH) ÇUBUKLARI */
+        /* CANLI ARAMA ÇUBUKLARI */
         .routing-box { display: flex; gap: 10px; position: relative; }
         .search-container { flex: 1; position: relative; }
-        .search-input { width: 100%; padding: 14px; border-radius: 10px; background: #1F2937; border: 1px solid var(--border-light); color: white; outline: none; font-size: 14px; font-weight: 500;}
+        .search-input { width: 100%; padding: 12px; border-radius: 8px; background: #1F2937; border: 1px solid var(--border-light); color: white; outline: none; font-size: 13px; font-weight: 500;}
         .search-input:focus { border-color: var(--primary); }
         .search-results { position: absolute; bottom: 100%; left: 0; width: 100%; background: #1F2937; border: 1px solid var(--primary); border-radius: 8px; max-height: 200px; overflow-y: auto; z-index: 200; display: none; margin-bottom: 5px; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);}
         .search-results.active { display: block; }
-        .search-item { padding: 12px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-main); font-size: 13px;}
+        .search-item { padding: 10px 12px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-main); font-size: 12px;}
         .search-item:hover { background: var(--primary); color: #000; font-weight: bold;}
 
-        .btn { padding: 14px 20px; border-radius: 10px; border: none; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; white-space: nowrap;}
+        .btn { padding: 12px 15px; border-radius: 8px; border: none; font-weight: bold; font-size: 13px; cursor: pointer; transition: 0.2s; white-space: nowrap;}
         .btn-primary { background: var(--primary); color: #000; }
         .btn-primary:hover { background: #059669; }
         .btn-secondary { background: var(--secondary); color: #000; display: none; }
         
-        .meta-info { display: flex; gap: 20px; font-size: 12px; color: var(--text-muted); border-top: 1px dashed var(--border-light); padding-top: 10px;}
+        .meta-info { display: flex; gap: 20px; font-size: 11px; color: var(--text-muted); border-top: 1px dashed var(--border-light); padding-top: 8px;}
         .meta-info span { display: flex; align-items: center; gap: 5px; }
-        .meta-info b { color: var(--primary); font-size: 14px;}
+        .meta-info b { color: var(--primary); font-size: 13px;}
 
-        #instructions { max-height: 80px; overflow-y: auto; font-size: 13px; color: var(--text-muted); line-height: 1.6; padding: 0 10px; border-left: 3px solid var(--primary);}
+        #instructions { max-height: 60px; overflow-y: auto; font-size: 12px; color: var(--text-muted); line-height: 1.5; padding: 0 10px; border-left: 3px solid var(--primary);}
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 10px; }
 
         @media (max-width: 768px) {
-            .header { padding: 10px 15px; }
+            .header { padding: 10px; }
             .status { display: none; } 
             .routing-box { flex-direction: column; } 
             .floor-tabs { flex-wrap: wrap; } 
-            .floor-tabs button { flex: 1 1 45%; padding: 10px; }
-            .dashboard { padding: 15px; }
-            .node-label { transform: translate(-50%, 12px); padding: 4px 8px;}
+            .floor-tabs button { flex: 1 1 45%; padding: 8px; }
+            .dashboard { padding: 10px; }
+            .node-label { transform: translate(-50%, 10px); padding: 3px 6px;}
+            #map-viewport { padding: 5px;}
         }
     </style>
 </head>
@@ -133,17 +149,19 @@
     </header>
 
     <div id="map-viewport">
-        <div id="map-layer">
-            <svg class="blueprint" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet">
-                <polygon points="500,150 250,600 750,600" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="80" stroke-linejoin="round"/>
-                <line x1="500" y1="420" x2="380" y2="370" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
-                <line x1="500" y1="420" x2="620" y2="370" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
-                <line x1="500" y1="420" x2="500" y2="550" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
-            </svg>
-            <svg id="routes-layer" class="routes-svg" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet"></svg>
-            <div id="nodes-layer"></div>
-            <div id="avatar" style="display: none;">🚶</div>
-            <div id="sim-overlay"><div class="sim-spinner"></div> <span id="sim-text">KGTÜ NAV Yönlendiriyor...</span></div>
+        <div id="map-wrapper">
+            <div id="map-layer">
+                <svg class="blueprint" viewBox="0 0 1000 800" width="100%" height="100%">
+                    <polygon points="500,150 250,600 750,600" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="80" stroke-linejoin="round"/>
+                    <line x1="500" y1="420" x2="380" y2="370" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
+                    <line x1="500" y1="420" x2="620" y2="370" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
+                    <line x1="500" y1="420" x2="500" y2="550" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
+                </svg>
+                <svg id="routes-layer" class="routes-svg" viewBox="0 0 1000 800" width="100%" height="100%"></svg>
+                <div id="nodes-layer"></div>
+                <div id="avatar" style="display: none;">🚶</div>
+                <div id="sim-overlay"><div class="sim-spinner"></div> <span id="sim-text">KGTÜ NAV Yönlendiriyor...</span></div>
+            </div>
         </div>
     </div>
 
@@ -157,11 +175,11 @@
 
         <div class="routing-box">
             <div class="search-container">
-                <input type="text" id="select-start" class="search-input" placeholder="Neredesiniz? (Örn: Amfi 1)" autocomplete="off">
+                <input type="text" id="select-start" class="search-input" placeholder="Neredesiniz? (Arama Yapın)" autocomplete="off">
                 <div id="results-start" class="search-results"></div>
             </div>
             <div class="search-container">
-                <input type="text" id="select-end" class="search-input" placeholder="Nereye? (Örn: Neo Coffee)" autocomplete="off">
+                <input type="text" id="select-end" class="search-input" placeholder="Nereye Gideceksiniz?" autocomplete="off">
                 <div id="results-end" class="search-results"></div>
             </div>
             
@@ -170,7 +188,7 @@
         </div>
 
         <div class="meta-info">
-            <span>📏 Tahmini Mesafe: <b id="meta-dist">0m</b></span>
+            <span>📏 Mesafe: <b id="meta-dist">0m</b></span>
             <span>⏱️ Süre: <b id="meta-time">0sn</b></span>
         </div>
 
@@ -320,7 +338,6 @@ class UIController {
         document.querySelectorAll('.floor-tabs button').forEach(b=>b.onclick=(ev)=>this.cf(parseInt(ev.target.dataset.floor)));
         document.getElementById('btn-calc').onclick=()=>this.calc(); document.getElementById('btn-sim').onclick=()=>this.sim();
         
-        // Dışarı tıklayınca arama sonuçlarını kapat
         document.addEventListener('click', (e) => {
             if(!e.target.closest('.search-container')) {
                 document.getElementById('results-start').classList.remove('active');
@@ -331,7 +348,6 @@ class UIController {
         this.cf(0);
     }
 
-    // --- AKILLI CANLI ARAMA (LIVE SEARCH) ---
     setupLiveSearch(inputId, resultsId) {
         const input = document.getElementById(inputId);
         const results = document.getElementById(resultsId);
@@ -373,8 +389,6 @@ class UIController {
             if(n.f===f){
                 let px = this.getPercent(n.x, 1000);
                 let py = this.getPercent(n.y, 800);
-                
-                // Haritadaki noktaya tıklanınca otomatik olarak hedef kutusuna ismini yaz
                 c.innerHTML+=`<div class="node ${n.type||''}" style="left:${px}%; top:${py}%;" onclick="document.getElementById('select-end').value='${n.name}'"></div><div class="node-label" style="left:${px}%; top:${py}%;">${n.name}</div>`;
             }
         }
@@ -430,33 +444,23 @@ class UIController {
         for(let i=0; i<this.e.p.length; i++){
             let n=this.e.n[this.e.p[i]];
             
-            // Eğer kat değişimi varsa
             if(n.f!==this.e.f) { 
                 avG.innerHTML="↕️"; 
                 simText.innerText = `${n.f}. Kata Çıkılıyor...`;
-                
-                // Senkronize bekleme: Önce asansör animasyonunu bekle
                 await new Promise(r=>setTimeout(r, 1200)); 
-                
-                // Sonra katı değiştir
                 this.cf(n.f, true); 
                 avG.innerHTML="🚶"; 
                 simText.innerText = "KGTÜ NAV Yönlendiriyor...";
-                
-                // Kat değiştikten sonra UI'nin güncellenmesi için ufak bir es payı
                 await new Promise(r=>setTimeout(r, 300)); 
             }
             
-            // Konum güncellemesi
             let px = this.getPercent(n.x, 1000);
             let py = this.getPercent(n.y, 800);
             avG.style.left=`${px}%`; av.style.top=`${py}%`; 
             
-            // Adım atma süresi kadar senkronize bekle, hedefe ulaşmadan döngüyü bitirme
             await new Promise(r=>setTimeout(r, 800));
         }
         
-        // Döngü TAMAMEN bittiğinde (adam hedefe vardığında) burası çalışır
         avG.innerHTML="📍"; 
         overlay.classList.add('success');
         overlay.innerHTML = `<span>✅ Hedefe Ulaşıldı</span>`;

@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KGTÜ Akıllı Kampüs | Master Edition</title>
+    <title>KGTÜ Akıllı Kampüs | İletişim ve Tanıtım Topluluğu</title>
     <style>
-        /* --- TEMA AYARLARI --- */
+        /* --- MUHTEŞEM ARAYÜZ & RENK PALETİ --- */
         :root {
             --bg-color: #030712; 
             --surface-color: rgba(17, 24, 39, 0.95); 
-            --primary: #10B981; /* Neon Yeşil */
-            --secondary: #F97316; /* KGTÜ Turuncu */
-            --coffee: #D97706; /* Neo Coffee Rengi */
-            --kitchen: #EAB308; /* Neo Mutfak Rengi */
+            --primary: #10B981; 
+            --secondary: #F97316; 
+            --coffee: #D97706; 
+            --kitchen: #EAB308; 
             --text-main: #F3F4F6;
             --text-muted: #9CA3AF;
             --border-light: rgba(255, 255, 255, 0.1);
@@ -24,19 +24,20 @@
         /* --- KGTÜ NAV ANİMASYONU (Açılış Ekranı) --- */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: var(--bg-color); z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
+            background: radial-gradient(circle at center, #111827, #030712);
+            z-index: 9999; display: flex; justify-content: center; align-items: center;
             flex-direction: column;
-            animation: fadeOut 1s ease-in-out 2s forwards;
+            animation: fadeOut 0.8s ease-in-out 2.2s forwards;
             pointer-events: none;
         }
         #splash-screen h1 {
-            font-size: 3rem; letter-spacing: 5px; color: var(--text-main);
+            font-size: 3.5rem; letter-spacing: 5px; color: var(--text-main);
             animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
         }
         #splash-screen span { color: var(--primary); }
         #splash-screen p {
-            color: var(--secondary); margin-top: 10px; font-weight: bold; letter-spacing: 2px;
+            color: var(--secondary); margin-top: 15px; font-weight: bold; letter-spacing: 3px; font-size: 14px;
             opacity: 0; animation: fadeIn 0.5s ease-in-out 0.8s forwards;
         }
 
@@ -46,27 +47,37 @@
 
         /* --- HEADER --- */
         header {
-            padding: 15px 25px; background: rgba(3, 7, 18, 0.9); backdrop-filter: blur(15px);
+            padding: 12px 25px; background: rgba(3, 7, 18, 0.9); backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between;
             align-items: center; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.8);
         }
-        .brand h1 { font-size: 20px; font-weight: 800; letter-spacing: 1.5px; margin:0;}
+        .brand { display: flex; flex-direction: column; gap: 2px;}
+        .brand h1 { font-size: 20px; font-weight: 800; letter-spacing: 1px; margin:0;}
         .brand h1 span { color: var(--primary); }
+        .credit { font-size: 10px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px;}
         .status { font-size: 11px; font-weight: bold; color: var(--secondary); background: rgba(249,115,22,0.1); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(249,115,22,0.3);}
 
-        /* --- HARİTA ALANI --- */
+        /* --- HARİTA ALANI (Sıkışmayı Önleyen Dinamik Yapı) --- */
         #map-viewport { flex: 1; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 50%, #111827, #030712); display: flex; justify-content: center; align-items: center;}
         
-        #map-layer { position: absolute; width: 1000px; height: 800px; transform: scale(0.9); }
+        /* Ekran küçüldüğünde SVG'nin dışarı taşmasını engeller */
+        #map-layer { 
+            position: absolute; 
+            width: 1000px; height: 800px; 
+            top: 50%; left: 50%;
+            /* Ekran oranına göre dinamik küçültme: Üstlerin ve yanların sığmasını garanti eder */
+            transform: translate(-50%, -50%) scale(calc(min(100vw / 1050, 100vh / 1000))); 
+        }
         
-        .blueprint { position: absolute; width: 100%; height: 100%; opacity: 0.5; pointer-events: none; }
-        .routes-svg { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+        .blueprint { position: absolute; width: 100%; height: 100%; opacity: 0.5; pointer-events: none; overflow: visible; }
+        .routes-svg { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: visible; }
         
         /* NOKTALAR (NODES) */
         .node { position: absolute; width: 16px; height: 16px; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; border: 2px solid var(--bg-color); z-index: 10; transition: 0.2s;}
         .node:hover { transform: translate(-50%, -50%) scale(1.5); box-shadow: 0 0 15px var(--primary); z-index: 20;}
         
         .node.elevator { background: #E2E8F0; border-radius: 8px; width: 22px; height: 22px; border: 3px solid #3B82F6; box-shadow: 0 0 10px rgba(59,130,246,0.5);} 
+        .node.entrance { background: #EF4444; width: 20px; height: 20px; }
         .node.classroom { background: var(--primary); }
         .node.academic { background: #A855F7; }
         .node.special { background: var(--secondary); width: 24px; height: 24px; border: 3px solid #000; box-shadow: 0 0 15px var(--secondary);}
@@ -104,6 +115,12 @@
         #instructions { max-height: 80px; overflow-y: auto; font-size: 13px; color: var(--text-muted); line-height: 1.6; padding: 0 10px; border-left: 3px solid var(--primary);}
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 10px; }
+        
+        /* Responsive düzenlemeler */
+        @media (max-width: 768px) {
+            .routing-box { flex-direction: column; }
+            .status { display: none; } /* Mobilde üst barı daraltmamak için gizle */
+        }
     </style>
 </head>
 <body>
@@ -114,7 +131,10 @@
     </div>
 
     <header>
-        <div class="brand"><h1>KGTÜ <span>NAV OS</span></h1></div>
+        <div class="brand">
+            <h1>KGTÜ <span>NAV OS</span></h1>
+            <div class="credit">İletişim ve Tanıtım Topluluğu tarafından hazırlanmıştır</div>
+        </div>
         <div class="status">KAMPÜS İÇİ YÖNLENDİRME AKTİF</div>
     </header>
 
@@ -148,14 +168,13 @@
             <button class="btn btn-secondary" id="btn-sim">▶ Yürüt</button>
         </div>
 
-        <div id="instructions">Asansör alanları aynı zamanda blok kapıları (girişleri) olarak güncellenmiştir. Lütfen bir başlangıç noktası seçin.</div>
+        <div id="instructions">Lütfen menülerden başlangıç ve hedef konumlarınızı seçin.</div>
     </div>
 
 <script>
 // ============================================================================
 // 1. VERİTABANI (NOKTALAR) 
 // ============================================================================
-// Dış köşeler sılındi. Asansörler (A, B, C) artık zemin katta "Giriş" olarak adlandırılıyor.
 const DB = {
     nodes: {
         // --- ZEMİN KAT ---
